@@ -11,6 +11,7 @@ const serviceApi = createApi({
         url: `student/add`,
         method: "POST",
         body: student,
+        invalidatesTags: ["students"],
       }),
     }),
     attendance: builder.mutation({
@@ -18,10 +19,12 @@ const serviceApi = createApi({
         url: `student/attendance`,
         method: "POST",
         body: { aadhaarNumber },
+        invalidatesTags: ["students"],
       }),
     }),
     getStudents: builder.query({
       query: () => `student/get`,
+      providesTags: ["students"],
     }),
   }),
 });
