@@ -1,9 +1,19 @@
-import { Container, Row, Col } from "react-bootstrap";
+import { Container, Row, Col, Table } from "react-bootstrap";
 import { useGetStudentsQuery } from "../../apis/service";
 import "./style.css";
 
 const AttendanceTable = () => {
   const { data } = useGetStudentsQuery();
+
+  const getUniqueDates = (students) => {
+    const allDates = new Set();
+    students.forEach((student) =>
+      student.attendance.forEach((attendance) => allDates.add(attendance.date))
+    );
+    return Array.from(allDates).sort(
+      (dateA, dateB) => new Date(dateA) - new Date(dateB)
+    );
+  };
 
   return (
     <Container>
@@ -11,37 +21,54 @@ const AttendanceTable = () => {
         <h2 className="text-center fw-bold mb-4 mt-5">Attendance Table</h2>
       </Row>
       <Row className="d-flex justify-content-center align-items-center">
-        <Col className="col-xl-6 col-lg-6 col-12 d-flex justify-content-center flex-column">
-          <table border={2} className="text-center">
+        <Col className="col-xl-8 col-lg-8 col-12 d-flex justify-content-center flex-column">
+          <Table
+            striped
+            bordered
+            hover
+            className="text-center attendance-table"
+          >
             <thead>
               <tr>
-                <th>S.No</th>
-                <th>Name</th>
-                <th>Subject</th>
-                <th>Attendance Dates</th>
+                <th style={{ padding: "5px" }}>S.No</th>
+                <th style={{ padding: "5px" }}>Name</th>
+                <th style={{ padding: "5px" }}>Subject</th>
+                {getUniqueDates(data?.students || []).map((date, index) => (
+                  <th key={index} style={{ padding: "5px" }}>
+                    {date.split("T")[0]}
+                  </th>
+                ))}
               </tr>
             </thead>
             <tbody>
-              {data?.students.map((student, index) => (
+              {data?.students.map((student, studentIndex) => (
                 <tr key={student._id}>
-                  <td>{index + 1}</td>
-                  <td>{student.fullName}</td>
-                  <td>{student.subject}</td>
-                  <td>
-                    {student.attendance.length > 0 ? (
-                      student.attendance.map((attendance) => (
-                        <span key={attendance._id}>
-                          {attendance.date.split("T")[0]}
-                        </span>
-                      ))
-                    ) : (
-                      <span>No attendance recorded</span>
-                    )}
-                  </td>
+                  <td style={{ padding: "5px" }}>{studentIndex + 1}</td>
+                  <td style={{ padding: "5px" }}>{student.fullName}</td>
+                  <td style={{ padding: "5px" }}>{student.subject}</td>
+                  {/* Display attendance status for all dates (or 'Absent' for missing) */}
+                  {getUniqueDates(data?.students || []).map(
+                    (date, dateIndex) => (
+                      <td
+                        key={`${studentIndex}-${dateIndex}`}
+                        style={{ padding: "5px" }}
+                      >
+                        {student.attendance.some(
+                          (attendance) => attendance.date === date
+                        )
+                          ? student.attendance.find(
+                              (attendance) => attendance.date === date
+                            ).present
+                            ? "Present"
+                            : "Absent"
+                          : "Absent"}
+                      </td>
+                    )
+                  )}
                 </tr>
               ))}
             </tbody>
-          </table>
+          </Table>
         </Col>
       </Row>
     </Container>
