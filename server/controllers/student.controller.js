@@ -9,6 +9,15 @@ const studentAdd = async (req, res) => {
   }
 };
 
+const getStudents = async (req, res) => {
+  try {
+    const students = await studentService.find();
+    res.status(200).json({ message: "Students data retrieved", students });
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+
 const studentAttendance = async (req, res) => {
   const { aadhaarNumber } = req.body;
   const today = new Date();
@@ -44,4 +53,4 @@ const studentAttendance = async (req, res) => {
   }
 };
 
-module.exports = { studentAdd, studentAttendance };
+module.exports = { studentAdd, studentAttendance, getStudents };

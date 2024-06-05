@@ -19,4 +19,13 @@ const findByAadhaarNumber = async (aadhaarNumber) => {
   }
 };
 
-module.exports = { saveStudent, findByAadhaarNumber };
+const findAllStudents = async () => {
+  try {
+    const students = await Student.find({});
+    return students;
+  } catch (error) {
+    throw error;
+  }
+};
+
+module.exports = { saveStudent, findByAadhaarNumber, findAllStudents };

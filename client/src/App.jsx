@@ -1,9 +1,10 @@
-import { QRScanner, Services } from "./components";
+import { QRScanner, AttendanceTable } from "./components";
 
 const App = () => {
   return (
     <>
       <QRScanner />
+      <AttendanceTable />
     </>
   );
 };

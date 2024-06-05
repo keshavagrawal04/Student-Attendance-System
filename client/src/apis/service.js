@@ -20,8 +20,15 @@ const serviceApi = createApi({
         body: { aadhaarNumber },
       }),
     }),
+    getStudents: builder.query({
+      query: () => `student/get`,
+    }),
   }),
 });
 
 export default serviceApi;
-export const { useAddStudentMutation, useAttendanceMutation } = serviceApi;
+export const {
+  useAddStudentMutation,
+  useAttendanceMutation,
+  useGetStudentsQuery,
+} = serviceApi;
