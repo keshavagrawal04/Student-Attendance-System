@@ -59,9 +59,9 @@ const QRScanner = () => {
                 {!response.error && (
                   <>
                     <div>Student Name : {response?.student}</div>
-                    <p>{response?.message}</p>
                   </>
                 )}
+                <p>{response?.message}</p>
               </div>
               <button
                 className="btn btn-primary fs-5 mt-4"
