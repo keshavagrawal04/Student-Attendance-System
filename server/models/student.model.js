@@ -14,7 +14,7 @@ const attendanceSchema = new mongoose.Schema({
 
 const studentSchema = mongoose.Schema({
   fullName: { type: String, required: true },
-  aadhaarNumber: { type: Number, required: true, unique: true },
+  aadhaarNumber: { type: String, required: true, unique: true },
   subject: { type: String, required: true },
   attendance: {
     type: [attendanceSchema],

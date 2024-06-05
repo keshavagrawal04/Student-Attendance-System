@@ -1,11 +1,15 @@
 import { Container, Row, Col } from "react-bootstrap";
-import { Html5QrcodeScanner } from "html5-qrcode";
 import { useEffect, useState } from "react";
+import { useAttendanceMutation } from "../../apis/service";
+import { Html5QrcodeScanner } from "html5-qrcode";
 import "./style.css";
 
 const QRScanner = () => {
   const [scanResult, setScanResult] = useState("");
   const [isScanning, setIsScanning] = useState(true);
+  const [message, setMessage] = useState("");
+
+  const [addAttendance] = useAttendanceMutation();
 
   useEffect(() => {
     if (isScanning) {
@@ -14,17 +18,22 @@ const QRScanner = () => {
         fps: 5,
       });
 
-      scanner.render((result) => {
+      scanner.render(async (result) => {
         scanner.clear();
         setScanResult(result);
         setIsScanning(false);
+        const response = await addAttendance({ aadhaarNumber: result });
+        response.error
+          ? setMessage(response.error.data.message)
+          : setMessage(response.data.message);
+        console.log(response.error.data);
       });
 
       return () => {
         scanner.clear();
       };
     }
-  }, [isScanning]);
+  }, [isScanning, addAttendance]);
 
   const handleScanAnother = () => {
     setScanResult("");
@@ -40,7 +49,7 @@ const QRScanner = () => {
         <Col className="col-xl-6 col-lg-6 col-12 d-flex justify-content-center flex-column">
           {scanResult ? (
             <>
-              <div className="text-center fs-3">{scanResult}</div>
+              <div className="text-center fs-3">{message}</div>
               <button
                 className="btn btn-primary fs-5 mt-4"
                 onClick={handleScanAnother}
