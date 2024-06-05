@@ -3,7 +3,8 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 const serviceApi = createApi({
   reducerPath: "serviceApi",
   baseQuery: fetchBaseQuery({
-    baseUrl: "https://student-attendance-system-backend.vercel.app/api/",
+    baseUrl: "http://localhost:8000/api/",
+    // baseUrl: "https://student-attendance-system-backend.vercel.app/api/",
   }),
   endpoints: (builder) => ({
     addStudent: builder.mutation({
@@ -14,10 +15,10 @@ const serviceApi = createApi({
       }),
     }),
     attendance: builder.mutation({
-      query: ({ student }) => ({
+      query: (aadhaarNumber) => ({
         url: `student/attendance`,
         method: "POST",
-        body: student,
+        body: {aadhaarNumber},
       }),
     }),
   }),

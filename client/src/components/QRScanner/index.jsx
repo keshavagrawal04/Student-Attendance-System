@@ -7,7 +7,7 @@ import "./style.css";
 const QRScanner = () => {
   const [scanResult, setScanResult] = useState("");
   const [isScanning, setIsScanning] = useState(true);
-  const [message, setMessage] = useState("");
+  const [response, setResponse] = useState({});
 
   const [addAttendance] = useAttendanceMutation();
 
@@ -22,11 +22,14 @@ const QRScanner = () => {
         scanner.clear();
         setScanResult(result);
         setIsScanning(false);
-        const response = await addAttendance({ aadhaarNumber: result });
+        const response = await addAttendance(result);
         response.error
-          ? setMessage(response.error.data.message)
-          : setMessage(response.data.message);
-        console.log(response.error.data);
+          ? setResponse({ message: response.error.data.message, error: true })
+          : setResponse({
+              message: response.data.message,
+              student: response.data.student,
+              error: false,
+            });
       });
 
       return () => {
@@ -49,7 +52,12 @@ const QRScanner = () => {
         <Col className="col-xl-6 col-lg-6 col-12 d-flex justify-content-center flex-column">
           {scanResult ? (
             <>
-              <div className="text-center fs-3">{message}</div>
+              <div className="text-center fs-3">
+                {!response.error && (
+                  <div>Student Name : {response.student}</div>
+                )}
+                {response.message}
+              </div>
               <button
                 className="btn btn-primary fs-5 mt-4"
                 onClick={handleScanAnother}
