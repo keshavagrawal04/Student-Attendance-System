@@ -11,7 +11,7 @@ const studentAdd = async (req, res) => {
 
 const getStudents = async (req, res) => {
   try {
-    const students = await studentService.find();
+    const students = await studentService.findAllStudents();
     res.status(200).json({ message: "Students data retrieved", students });
   } catch (error) {
     console.log(error.message);
