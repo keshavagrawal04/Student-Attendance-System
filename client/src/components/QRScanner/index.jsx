@@ -24,10 +24,13 @@ const QRScanner = () => {
         setIsScanning(false);
         const response = await addAttendance(result);
         response.error
-          ? setResponse({ message: response.error.data.message, error: true })
+          ? setResponse({
+              message: response?.error?.data?.message,
+              error: true,
+            })
           : setResponse({
-              message: response.data.message,
-              student: response.data.student,
+              message: response?.data?.message,
+              student: response?.data?.student,
               error: false,
             });
       });
@@ -54,9 +57,11 @@ const QRScanner = () => {
             <>
               <div className="text-center fs-3">
                 {!response.error && (
-                  <div>Student Name : {response.student}</div>
+                  <>
+                    <div>Student Name : {response?.student}</div>
+                    <p>{response?.message}</p>
+                  </>
                 )}
-                {response.message}
               </div>
               <button
                 className="btn btn-primary fs-5 mt-4"
